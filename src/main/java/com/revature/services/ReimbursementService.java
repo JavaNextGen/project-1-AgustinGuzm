@@ -7,6 +7,9 @@ import com.revature.models.User;
 import java.util.Collections;
 import java.util.List;
 
+//add by aguzman
+import com.revature.repositories.ReimbursementDAO;
+// end by aguzman
 /**
  * The ReimbursementService should handle the submission, processing,
  * and retrieval of Reimbursements for the ERS application.
@@ -25,7 +28,22 @@ import java.util.List;
  * </ul>
  */
 public class ReimbursementService {
+	//----------add by aguzman
+	ReimbursementDAO eDAO = new ReimbursementDAO(); //So that mean, I can use the methods from the ReimbursementDAO
+	public void addReimbursement(Reimbursement NewReimbursement) {
+		
+		//Take in the Reimbursement object sent from the menu and send it 
+		//to the ReimbursementDAO to be inserted into the database
+		
+		//call the DAO method that inserts the new Reimbursement
+		eDAO.InsertReimbursement(NewReimbursement);
+	}
+	public void updReimbursement(Reimbursement unprocessedReimbursement) {
+ 
+    	eDAO.update(unprocessedReimbursement);
 
+	}
+	//----------end add by aguzman
     /**
      * <ul>
      *     <li>Should ensure that the user is logged in as a Finance Manager</li>
@@ -41,13 +59,23 @@ public class ReimbursementService {
      * After processing, the reimbursement will have its status changed to either APPROVED or DENIED.
      */
     public Reimbursement process(Reimbursement unprocessedReimbursement, Status finalStatus, User resolver) {
-        return null;
+
+    	return null;
     }
 
     /**
      * Should retrieve all reimbursements with the correct status.
      */
     public List<Reimbursement> getReimbursementsByStatus(Status status) {
-        return Collections.emptyList();
+    	 return eDAO.getByStatus(status);
+        //return Collections.emptyList();
     }
+    //--------add by aguzman
+    public List<Reimbursement> getByIdUid(int reimbId, int userId){
+    	return eDAO.getByIdUid(reimbId, userId);
+    }
+    public List<Reimbursement> getAll(){
+    	return eDAO.getAll();
+    }
+    //--------end add by aguzman
 }

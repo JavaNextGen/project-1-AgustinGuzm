@@ -26,6 +26,7 @@ public class AbstractUser {
     private String password;
     private Role role;
 
+
     public AbstractUser() {
         super();
     }
@@ -36,10 +37,12 @@ public class AbstractUser {
         this.username = username;
         this.password = password;
         this.role = role;
+       
+        
     }
 
     public int getId() {
-        return id;
+    	return id;
     }
 
     public void setId(int id) {
@@ -69,7 +72,7 @@ public class AbstractUser {
     public void setRole(Role role) {
         this.role = role;
     }
-
+ 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
