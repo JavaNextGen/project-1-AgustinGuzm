@@ -22,8 +22,9 @@ public class AuthController {
 		
 		//control flow to determine what happens in the event of successful/unsuccessful login
 		//invoke the login() method of the AuthService using the username and password from the LoginDTO
-		if(as.login(LDTO.getUsername(), LDTO.getPassword())) {
-			
+		int userval = as.login(LDTO.getUsername(), LDTO.getPassword());
+		//if(as.login(LDTO.getUsername(), LDTO.getPassword())) {
+		if (userval >0	) {
 			//create a user session so that they can access the applications other functionalities
 			ctx.req.getSession(); //req is a "Request Object", we establish sessions through it
 			
@@ -32,8 +33,15 @@ public class AuthController {
 			ctx.status(202); //202 - accepted. (but you could use any 200 level status code)
 			
 			//send a message relaying the success
-			ctx.result("Login Success!");
-			
+			//String nr= Integer.toString(userval);
+			if (userval == 1) {
+			ctx.result("Login Successful! :)");
+			ctx.status(201);
+			}else {
+				ctx.result("Login Successful! :)");
+			}
+			System.out.println(userval);
+			//ctx.result(nr);
 		} else {
 			
 			ctx.status(401); //"unauthorized" status code

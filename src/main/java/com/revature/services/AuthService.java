@@ -1,7 +1,9 @@
 package com.revature.services;
 
 import com.revature.models.User;
+import com.revature.repositories.UserDAO;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 /**
@@ -71,17 +73,31 @@ public class AuthService {
 	//soooooo we probably need a DAO method that has something like: 
 		//"select * from users where username = ? and password = ?" and then insert the values of the DTO for parameters
 	
-	public boolean login(String username, String password) {
+	//public boolean login(String username, String password) {
+	public int login(String username, String password) {	
+		UserDAO eDAO = new UserDAO();	
+		/*if (eDAO.getUser(username, password) != null) {
+			return true;
+		} */
+		int nruser =0;
+		int idusr =0;
+		List<User> Users = eDAO.getUser(username,password);
 		
-		//this is hardcoding - telling Java exactly what values make for a valid login
-		//in reality, you'll check the database for a username/password to see if a record exists
-		if(username.equals("user") && password.equals("password")) {
-			
-			return true; //true indicates successful login
-			
+		int nuser = Users.size();
+		if (nuser == 1){
+			  User pr = Users.get(0);
+			  nruser  = pr.getNrole();
+			  idusr   = pr.getId();
+			  return nruser;
+		}else {
+			return 0;
 		}
-		
-		return false; //unsuccessful login
+
+	
+		/*if(username.equals("user") && password.equals("password")) {
+			return true; //true indicates successful login
+		}*/
+		//return false; //unsuccessful login
 		
 		
 	}

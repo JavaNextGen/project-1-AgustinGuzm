@@ -56,14 +56,34 @@ public class ReimbursementDAO {
 		try(Connection conn = ConnectionFactory.getConnection()){ 
 			//Initialize an empty ResultSet object that will store the results of our SQL query
 			ResultSet rs = null;
-			String sql = "SELECT * FROM ers_reimbursment where reimb_author= ? and reimb_id = ?;";///reim_author= ? and
+			//String sql = "SELECT * FROM ers_reimbursment where reimb_author= ? and reimb_id = ?;";///reim_author= ? and
 	
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, userId);
-			ps.setInt(2, reimbId);
+			//PreparedStatement ps = conn.prepareStatement(sql);
+			//ps.setInt(1, userId);
+			//ps.setInt(2, reimbId);
+			String sql;
+			if(reimbId == 0 && userId >0) {
+				 sql = "SELECT * FROM ers_reimbursment where reimb_author= ?;";///reim_author= ? and
+				
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setInt(1, userId);
+				//ps.setInt(2, reimbId);
+				rs = ps.executeQuery();
+			}else if (reimbId > 0 && userId ==0) {
+				 sql = "SELECT * FROM ers_reimbursment where reimb_id = ?;";///reim_author= ? and
+				PreparedStatement ps = conn.prepareStatement(sql);
+				//ps.setInt(1, userId);
+				ps.setInt(1, reimbId);
+				rs = ps.executeQuery();
+			}else if(reimbId > 0 && userId >0) {
+				 sql = "SELECT * FROM ers_reimbursment where reimb_author= ? and reimb_id = ?;";///reim_author= ? and
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setInt(1, userId);
+				ps.setInt(2, reimbId);
+				rs = ps.executeQuery();
+			}
 
-
-			rs = ps.executeQuery();
+			//rs = ps.executeQuery();
 			
 			System.out.println(" execute query..");
 			//create an empty ArrayList to be filled with the data from the database

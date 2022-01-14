@@ -1,0 +1,124 @@
+-------------------------------------------------------------------------------------------------------------------------
+--script to create tables to use in project 1 
+-------------------------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS project1.ers_user_roles;
+CREATE TABLE project1.ers_user_roles (
+	ers_user_role_id serial NOT NULL PRIMARY KEY , -- rol ID
+	user_role        text   NOT NULL               -- rol name
+);
+-- Table comments
+COMMENT ON TABLE project1.ers_user_roles IS 'Pool of roles that an user can get';
+
+-- Column comments
+COMMENT ON COLUMN project1.ers_user_roles.ers_user_role_id IS 'rol ID';
+COMMENT ON COLUMN project1.ers_user_roles.user_role IS 'rol name';
+-------------------------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS project1.ers_reimbursment_type;
+
+CREATE TABLE project1.ers_reimbursment_type (
+	reimb_type_id serial NOT NULL PRIMARY KEY, -- Reimbursment type ID
+	reimb_type    TEXT   NOT NULL              -- Reimbursment type name
+	CONSTRAINT ers_reimbursment_type_pkey PRIMARY KEY (reimb_type_id)
+);
+COMMENT ON TABLE project1.ers_reimbursment_type IS 'Pool of Reimbursment that an user can do';
+
+-- Column comments
+
+COMMENT ON COLUMN project1.ers_reimbursment_type.reimb_type_id IS 'Reimbursment type ID';
+COMMENT ON COLUMN project1.ers_reimbursment_type.reimb_type IS 'Reimbursment type name';
+-------------------------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS project1.ers_reimbursment_status;
+
+CREATE TABLE project1.ers_reimbursment_status (
+	reimb_status_id serial NOT NULL PRIMARY KEY, -- Reimbursment status ID
+	reimb_status    TEXT   NOT NULL              -- Reimbursment status name
+);
+COMMENT ON TABLE project1.ers_reimbursment_status IS 'pool of Status Reimbursment that an user can did';
+
+-- Column comments
+
+COMMENT ON COLUMN project1.ers_reimbursment_status.reimb_status_id IS 'Reimbursment status ID';
+COMMENT ON COLUMN project1.ers_reimbursment_status.reimb_status IS 'Reimbursment status name';
+-------------------------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS project1.ers_users;
+
+CREATE TABLE project1.ers_users (
+	ers_users_id     serial NOT NULL PRIMARY KEY, -- Reimbursment user ID
+	ers_username     TEXT   NOT NULL UNIQUE, -- Reimbursment user name
+	ers_pasword      TEXT   NOT NULL,        -- Reimbursment user password
+	user_first_name  TEXT   NOT NULL,        -- Reimbursment user first name
+	user_last_name   TEXT           ,        -- Reimbursment last first name
+	user_email       TEXT   NOT NULL UNIQUE, -- Reimbursment user email
+	user_role_id     int    REFERENCES project1.ers_user_roles(ers_user_role_id) -- Reimbursment user rol selected
+);
+COMMENT ON TABLE project1.ers_users IS 'User that can request a reimbursment and financial managers';
+
+-- Column comments
+
+COMMENT ON COLUMN project1.ers_users.ers_users_id IS 'Reimbursment status ID';
+COMMENT ON COLUMN project1.ers_users.ers_username IS 'Reimbursment status name';
+
+-- Declare relationship with type of role table trought foreign key
+--project1.ers_users foreign keys
+
+--ALTER TABLE project1.ers_users 
+--      ADD CONSTRAINT ers_users_ers_user_role_id_fkey 
+--      FOREIGN KEY (ers_user_role_id) 
+--      REFERENCES project1.ers_user_roles(ers_user_role_id);
+
+-------------------------------------------------------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS project1.ers_reimbursment;
+
+CREATE TABLE project1.ers_reimbursment (
+	reimb_id          serial NOT NULL PRIMARY KEY, -- Reimbursment status ID
+	reimb_amount      numeric(10, 2) NOT NULL,     -- Reimbursment amount
+	reimb_submited    timestamp NOT NULL,          -- date reimbursment has been submited
+	reimb_resolved    timestamp ,                  -- date reimbursment has been resolved
+	reimb_description text ,                       -- reimbursment description
+	reimb_receipt     int ,                        -- reimbursment receipt number
+	reimb_author      int REFERENCES project1.ers_users(ers_users_id), -- user who create request
+	reimb_resolver    int REFERENCES project1.ers_users(ers_users_id), -- user who resolve request
+	reimb_status_id   int REFERENCES project1.ers_reimbursment_status(reimb_status_id), -- reimbursment estatus
+	reimb_type_id     int REFERENCES project1.ers_reimbursment_type(reimb_type_id)      -- reimbursment type
+);
+COMMENT ON TABLE project1.ers_reimbursment IS 'Detail of reimbursment that user request';
+
+-- Column comments
+
+COMMENT ON COLUMN project1.ers_reimbursment.reimb_id IS 'Reimbursment status ID';
+COMMENT ON COLUMN project1.ers_reimbursment.reimb_amount IS 'Reimbursment amount';
+------------- index to better performance when execute the query
+CREATE INDEX project1.ers_reimbursment_reimb_author_idx 
+          ON project1.ers_reimbursment (reimb_author,reimb_id);
+-------------------------------------------------------------------------------------------------------------------------
+INSERT INTO ers_user_roles (user_role) VALUES ('EMPLOYEE'),('FINANCIAL_MANAGER');
+INSERT INTO ers_reimbursment_status (reimb_status_id,reimb_status) VALUES (1,'APROVED'),(2,'DENIED'),(0,'PENDING');
+INSERT INTO ers_reimbursment_type (reimb_type) VALUES ('HOTEL'),('PARKING'),('TRANSPORTATION');
+
+INSERT INTO ers_users (ers_username,ers_pasword,user_first_name,user_last_name,user_email,user_role_id) 
+                VALUES ('AGUZMAN','GRAGRA','AGUST','GUZM','NOMAIL',1);
+
+INSERT INTO ers_users (ers_username,ers_pasword,user_first_name,user_last_name,user_email,user_role_id) 
+                  VALUES ('GRAGRA','GRAGRA','AGUST','GUZM','MYMAIL',2);
+                  
+INSERT INTO ers_reimbursment (reimb_amount,reimb_submited,reimb_description,reimb_author,reimb_status_id,reimb_type_id)
+        VALUES (1125.23,now(),'Hotel Paris',2,0,3);
+INSERT INTO ers_users (ers_users_id, ers_username,ers_pasword,user_first_name,user_last_name,user_email,user_role_id) 
+                  VALUES (0,'NOBODY','NOUSE','NOBADY','NOBODY','NO_MAIL',2);       
+SELECT * FROM ers_reimbursment;
+
+INSERT INTO ers_reimbursment (reimb_amount, reimb_submited, reimb_description, reimb_author, reimb_status_id, reimb_type_id) 
+                VALUES (123.45, 'Wed Dec 29 00:04:29 EST 2021', 'hotel moom inn', 1, 0, 1);
+                
+INSERT INTO ers_reimbursment (reimb_amount, reimb_submited, reimb_description, reimb_author, reimb_status_id, reimb_type_id) 
+                VALUES (123.45, 'Wed Dec 29 09:01:57 EST 2021', 'hotel ritz', 1, 1, 1)
+ 
+SELECT * FROM ers_reimbursment where reimb_author= 2 and reimb_id = 1;
+
+INSERT INTO ers_reimbursment (reimb_amount, reimb_submited, reimb_description, reimb_author, reimb_status_id, reimb_type_id) 
+                      VALUES (123.45, 'Wed Dec 29 09:57:08 EST 2021', 'hotel ritz', 1, 2, 1);
+               
+INSERT INTO ers_users (ers_users_id, ers_username,ers_pasword,user_first_name,user_last_name,user_email,user_role_id) 
+                  VALUES (0,'NOBODY','NOUSE','NOBADY','NOBODY','NO_MAIL',2);
+SELECT * FROM ers_reimbursment_status ;
