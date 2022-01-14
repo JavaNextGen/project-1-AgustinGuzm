@@ -4,7 +4,7 @@ const url = "http://localhost:3000/" //putting our base URL in a variable for cl
 //add eventListeners to our buttons to give them functionality
 //document.getElementById("re_stat").addEventListener("click", gestatreimb);
 document.getElementById("getstaReimbButton").addEventListener("click", gestatreimb);
-//document.getElementById("restButton").addEventListener("click", gestatreimb);
+document.getElementById("setudpReimbButton").addEventListener("click", upstatreimb);
 
 
 //remember, async returns a promise (which fetch request return)
@@ -70,4 +70,32 @@ async function gestatreimb() {
     }
 
 
+}
+
+async function upstatreimb() {
+    let udpreimbobj = {
+        fsubmited: "1",
+        Dreimbur: "1",
+        receipt: "1",
+        nauthor: "1",
+        nresolver: 2,
+        nstatus: 1,
+        ntype: 0,
+        amount:0  
+    }
+    //we will send a fetch request to get our employee data
+    //by default, fetch requests send GET requests
+    let udpresponse = await fetch (url + "reimbu", {
+        method: "PUT", //send a POST request (would be a GET if we didn't do this...)
+        body: JSON.stringify(udpreimbobj), //turn our user object into JSON
+        credentials: "include"
+    });
+    console.log(udpresponse);
+        //control flow based on successful/unsuccessful login
+    if(udpresponse.status === 200) {
+        //wipe our login row and welcome the user 
+        document.getElementById("formReq").innerText="Reimbursement updated successfully";
+    } else {
+        document.getElementById("formReq").innerText="Reimbursement does not updated";
+    }
 }

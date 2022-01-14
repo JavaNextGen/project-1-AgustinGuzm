@@ -143,7 +143,7 @@ public class MainMenu {
 		app.get("/reimb/{e_st}", crc.getReimbursementHandler_stat);
 		app.get("/reimb/{e_id}/{e_uid}", crc.getReimbIdUidHandler_RidUid);
 		app.post("/reimb", crc.InsertReimbursement);
-		app.put("/reimb", crc.updateReimbursement);
+		app.put("/reimbu", crc.updateReimbursement);
 
 		//====================login ==================
 		//handler ending in /login to send and inputted username/password to be validated
