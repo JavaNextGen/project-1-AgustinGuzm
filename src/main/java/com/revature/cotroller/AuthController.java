@@ -17,9 +17,7 @@ public class AuthController {
 		
 		Gson gson = new Gson(); //create a new Gson object to make Java <-> JSON conversions
 		
-		LoginDTO LDTO = gson.fromJson(body, LoginDTO.class); //turn that JSON String into a LoginDTO object
-		
-		
+		LoginDTO LDTO = gson.fromJson(body, LoginDTO.class); //turn that JSON String into a LoginDTO object		
 		//control flow to determine what happens in the event of successful/unsuccessful login
 		//invoke the login() method of the AuthService using the username and password from the LoginDTO
 		int userval = as.login(LDTO.getUsername(), LDTO.getPassword());
