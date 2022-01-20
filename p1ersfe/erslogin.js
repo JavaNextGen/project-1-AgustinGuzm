@@ -41,9 +41,9 @@ async function loginFunction() {
         document.getElementById("loginRow").innerText="Welcome!";
        // window.location.replace("fm_lstusers.html");
        if(response.status === 201){
-           window.location.href = "us_main.html";
+           window.location.href = "us_header.html";
        }else{
-           window.location.href = "fm_main.html";
+           window.location.href = "fm_headder.html";
        }
     } else {
         document.getElementById("loginRow").innerText="Login failed! Refresh the page";
